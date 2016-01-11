@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html>
+<body on="getNode(0);">
+
+<p id="demo"></p>
+<button onclick="getNode(i--);">&lt;</button>
+<button onclick="getNode(document.getElementById('booknbr').value);">Get node</button>
+<button onclick="getNode(i++)">&gt;</button>
+<br><input type="text" value="0" id="booknbr"/>
+<script>
+
+var i = 0;
+var myxmlDoc;
+var xhttp = new XMLHttpRequest();
+xhttp.onreadystatechange = function() {
+    if (xhttp.readyState == 4 && xhttp.status == 200) {
+        myxmlDoc = myFunction(xhttp);
+    }
+};
+xhttp.open("GET", "books.xml", true);
+xhttp.setRequestHeader("Content-type", "text/xml");
+xhttp.send();
+
+function myFunction(xml) {
+    var xmlDoc = xml.responseXML;
+    return xmlDoc;
+}
+
+function getNode(x){
+  document.getElementById("demo").innerHTML ="";
+  document.getElementById("booknbr").value = x;
+  var bookCount = myxmlDoc.getElementsByTagName("book").length;
+  if (i >= bookCount-1) i = bookCount-1;
+  else if (i < 0) i = 0;
+
+  var aBook = myxmlDoc.getElementsByTagName("book")[x];
+  var html = "<table border=\"1\">";
+  console.log("aBook.childNodes.length" + aBook.childNodes.length);
+
+  for (var i = 0; i < aBook.childNodes.length; i++) {
+    var aNode = aBook.childNodes[i];
+
+    if (aNode.nodeType == 1) {
+      console.log(aNode.nodeName + ": " + aNode.childNodes[0].nodeValue);
+      html += "<tr><th>" + aNode.nodeName + "</th><td>" + aNode.childNodes[0].nodeValue + "</td></tr>";
+    }
+
+  // if (aNode.nodeType == 1) {
+    //   document.getElementById("demo").innerHTML += aNode.nodeName + aNode.firstChild.nodeValue;
+    //   //console.log(aNode.nodeName + aNode.firstChild.nodeValue);
+    // }
+    // if (aNode.nodeType == 3) {
+    //
+    //   console.log(aNode);
+    //   //console.log(aNode.firstChild.nodeValue);
+    // }
+  }
+  html += "</table>",
+  document.getElementById("demo").innerHTML += html;
+
+}
+
+
+</script>
+
+</body>
+</html>
