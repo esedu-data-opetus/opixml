@@ -1,44 +1,63 @@
 <!DOCTYPE html>
 <html>
-<body on="getNode(0);">
+<body>
 
+<button onclick="getNode(i-1);">&lt;</button>
+<button onclick="getNode(document.getElementById('booknbr').value);">Get node</button><input type="text" id="booknbr" size="2" maxlength="2"  />
+<button onclick="getNode(i+1)">&gt;</button>
+
+<p id="info" style="color: red"></p>
 <p id="demo"></p>
-<button onclick="getNode(i--);">&lt;</button>
-<button onclick="getNode(document.getElementById('booknbr').value);">Get node</button>
-<button onclick="getNode(i++)">&gt;</button>
-<br><input type="text" value="0" id="booknbr"/>
-<script>
 
-var i = 0;
-var myxmlDoc;
-var xhttp = new XMLHttpRequest();
+<script>
+var i = 0; // laskuri, joka osoittaa haluttuun elementtiin
+var myxmlDoc; // muuttuja, johon xml-tiedosto ladataan
+var bookCount = 0;
+
+var xhttp = new XMLHttpRequest(); // ajax-objekti
+//console.log("i = " + i);
+// pyydetään ajaxilla books.xml-tiedosto
 xhttp.onreadystatechange = function() {
     if (xhttp.readyState == 4 && xhttp.status == 200) {
-        myxmlDoc = myFunction(xhttp);
+        myxmlDoc = xhttp.responseXML;
+        bookCount = myxmlDoc.getElementsByTagName("book").length;
+        //console.log("i = " + i);
+        getNode(i);
     }
 };
 xhttp.open("GET", "books.xml", true);
 xhttp.setRequestHeader("Content-type", "text/xml");
 xhttp.send();
 
-function myFunction(xml) {
-    var xmlDoc = xml.responseXML;
-    return xmlDoc;
-}
 
+// getNode hakee halutun elementin
 function getNode(x){
+  i = x;
+  console.log("bookCount = " + bookCount);
+  if (x >= bookCount-1) {
+    i = bookCount-1;
+    document.getElementById("info").innerHTML = "Olet viimeisessä!";
+  }
+  else if (x < 0) {
+    i = 0;
+    document.getElementById("info").innerHTML = "Olet ensimmäisessä!";
+  }
+  else {
+    document.getElementById("info").innerHTML = "";
+  }
+  console.log("x = " + x);
+  console.log("i = " + i);
+
+
   document.getElementById("demo").innerHTML ="";
-  document.getElementById("booknbr").value = x;
-  var bookCount = myxmlDoc.getElementsByTagName("book").length;
-  if (i >= bookCount-1) i = bookCount-1;
-  else if (i < 0) i = 0;
+  document.getElementById("booknbr").value = i;
 
-  var aBook = myxmlDoc.getElementsByTagName("book")[x];
+  var aBook = myxmlDoc.getElementsByTagName("book")[i];
   var html = "<table border=\"1\">";
-  console.log("aBook.childNodes.length" + aBook.childNodes.length);
+  //console.log("aBook.childNodes.length" + aBook.childNodes.length);
 
-  for (var i = 0; i < aBook.childNodes.length; i++) {
-    var aNode = aBook.childNodes[i];
+  for (var j = 0; j < aBook.childNodes.length; j++) {
+    var aNode = aBook.childNodes[j];
 
     if (aNode.nodeType == 1) {
       console.log(aNode.nodeName + ": " + aNode.childNodes[0].nodeValue);
