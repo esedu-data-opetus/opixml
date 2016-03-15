@@ -23,13 +23,24 @@ function parseBooks(xml) {
 
     for (var i = 0; i < books.length; i++) {
       var aBook = books[i];
-      var title = aBook.getElementsByTagName("title");
-      console.log(title[0].childNodes[0].nodeValue);
+      var title = aBook.getElementsByTagName("title")[0].childNodes[0].nodeValue;
+      var year =  aBook.getElementsByTagName("year")[0].childNodes[0].nodeValue;
+      var author =  aBook.getElementsByTagName("author");
+      var price =  aBook.getElementsByTagName("price")[0].childNodes[0].nodeValue;;
+      var category = aBook.getAttribute("category");
 
+      //console.log(title[0].childNodes[0].nodeValue);
+      html += "<h2>" + title + " (" + year +  ")</h2>";
+      html += "<p>Price: " + price +  "</p>";
+      html += "<p>Category: " + category +  "</p>";
+      html += "<p>Author(s):</p>";
+      //console.log(author.length);
       //console.log(aBook);
-      for (var j = 0; j < aBook.childNodes.length; j++){
-        if (aBook.childNodes[j].nodeType == 1) {
-          html += aBook.childNodes[j].childNodes[0].nodeValue;
+      for (var j = 0; j < author.length; j++){
+
+        if (author[j].nodeType == 1) {
+          console.log(author[j].childNodes[0].nodeValue);
+          html += author[j].childNodes[0].nodeValue + "<br>";
          }
       }
     }
